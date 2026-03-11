@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}GED RLA Prep{% endblock %} — RLA Prep</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="{% url 'dashboard:home' %}" class="navbar-brand">
+      <div class="brand-icon">GED</div>
+      RLA Prep
+    </a>
+    {% if user.is_authenticated %}
+    <ul class="navbar-links">
+      <li><a href="{% url 'dashboard:home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Dashboard</a></li>
+      <li><a href="{% url 'dashboard:analytics' %}" {% if request.resolver_match.url_name == 'analytics' %}class="active"{% endif %}>Analytics</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <span class="navbar-user">{{ user.first_name|default:user.username }}</span>
+      <a href="/auth/logout/" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#f2ede5;border:1px solid rgba(255,255,255,0.15);padding:6px 14px;font-size:0.8125rem;">Sign Out</a>
+    </div>
+    {% else %}
+    <div class="navbar-actions">
+      <a href="/auth/login/" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#f2ede5;border:1px solid rgba(255,255,255,0.15);padding:6px 14px;font-size:0.8125rem;">Log In</a>
+    </div>
+    {% endif %}
+  </div>
+</nav>
+<div class="page-wrapper">
+  {% block content %}{% endblock %}
+</div>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

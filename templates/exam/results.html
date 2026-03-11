@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load exam_tags %}
+{% load static %}
+{% block title %}Results — {{ attempt.test.title }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/exam.css' %}">{% endblock %}
+{% block content %}
+<div class="container">
+
+  <!-- RESULTS HERO -->
+  <div class="results-hero animate-fade-in">
+    <div style="margin-bottom:8px;">
+      <a href="{% url 'dashboard:home' %}" style="font-size:0.875rem;color:var(--text-tertiary);">&larr; Dashboard</a>
+    </div>
+    <p style="font-size:0.875rem;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;">{{ attempt.test.title }} &mdash; Results</p>
+
+    <div class="results-score-display">
+      <div class="ged-score" style="color:{{ score_color }}">{{ attempt.estimated_ged_score|default:"—" }}</div>
+      <div class="ged-score-label">Estimated GED Score</div>
+      <div class="score-band" style="background:{{ score_color }}22;color:{{ score_color }};border:1px solid {{ score_color }}44;">{{ score_band }}</div>
+    </div>
+
+    <div class="results-stats">
+      <div class="results-stat">
+        <div class="results-stat-value">{{ correct }}</div>
+        <div class="results-stat-label">Correct</div>
+      </div>
+      <div class="results-stat">
+        <div class="results-stat-value">{{ incorrect }}</div>
+<div class="results-stat-label">Incorrect</div>
+      </div>
+      <div class="results-stat">
+        <div class="results-stat-value">{{ attempt.percentage_score }}%</div>
+        <div class="results-stat-label">Score</div>
+      </div>
+      {% if attempt.time_taken_seconds %}
+      <div class="results-stat">
+        <div class="results-stat-value">{{ attempt.time_taken_seconds|minutes_display }}</div>
+        <div class="results-stat-label">Minutes Used</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:start;">
+
+    <!-- LEFT: QUESTION REVIEW -->
+    <div>
+      <div class="section-header">
+        <h2 class="section-title">Question Review</h2>
+        <p class="section-subtitle">Click any question to see the explanation</p>
+      </div>
+
+      {% for r in results %}
+      <div class="review-item {% if r.is_correct %}correct-item{% endif %}" id="review-{{ r.number }}">
+        <div class="review-header">
+          <div class="review-status {% if r.is_correct %}correct{% elif r.your_answer %}incorrect{% else %}unanswered{% endif %}">
+            {% if r.is_correct %}&#10003;{% elif r.your_answer %}&#10007;{% else %}—{% endif %}
+          </div>
+          <div class="review-question-text">
+            <span style="font-size:0.75rem;color:var(--text-tertiary);margin-right:8px;">Q{{ r.number }}</span>
+            {{ r.text|truncatechars:100 }}
+          </div>
+          <div>
+            <span class="badge {% if r.is_correct %}badge-green{% elif r.your_answer %}badge-red{% else %}badge-gray{% endif %}" style="margin-right:8px;font-size:0.6875rem;">
+              {% if r.is_correct %}Correct{% elif r.your_answer %}Wrong{% else %}Skipped{% endif %}
+            </span>
+          </div>
+          <span class="review-chevron">&#9660;</span>
+        </div>
+
+        <div class="review-body">
+          {% if r.passage %}
+          <div style="font-size:0.8125rem;color:var(--text-tertiary);margin-bottom:12px;padding:8px 12px;background:var(--bg-elevated);border-radius:8px;">
+            Passage: <strong style="color:var(--text-secondary);">{{ r.passage.title }}</strong>
+          </div>
+          {% endif %}
+
+          <div style="font-size:0.9375rem;color:var(--text-primary);margin-bottom:16px;line-height:1.6;">{{ r.text }}</div>
+
+          {% if r.your_answer and not r.is_correct %}
+          <div class="review-answer-row your-answer wrong">
+            <span class="answer-indicator wrong">Your Answer</span>
+            <span style="font-weight:600;color:var(--accent-red);">{{ r.your_answer }}.</span>
+            <span style="color:var(--text-secondary);">{{ r.options|get_item:r.your_answer }}</span>
+          </div>
+          {% endif %}
+
+          <div class="review-answer-row correct-answer">
+            <span class="answer-indicator correct">Correct Answer</span>
+            <span style="font-weight:600;color:var(--accent-green);">{{ r.correct_answer }}.</span>
+            <span style="color:var(--text-secondary);">{{ r.options|get_item:r.correct_answer }}</span>
+          </div>
+
+          <div class="explanation-box">
+            <div class="explanation-label">Explanation</div>
+            {{ r.explanation }}
+          </div>
+
+          {% if r.explanation_chosen and not r.is_correct %}
+          <div class="explanation-box" style="background:rgba(255,69,58,0.05);border-color:rgba(255,69,58,0.2);margin-top:8px;">
+            <div class="explanation-label" style="color:var(--accent-red);">Why Your Answer Was Incorrect</div>
+            {{ r.explanation_chosen }}
+          </div>
+          {% endif %}
+
+          <div style="margin-top:12px;">
+            <span class="badge badge-blue" style="font-size:0.6875rem;">{{ r.skill }}</span>
+            <span class="badge badge-gray" style="font-size:0.6875rem;margin-left:6px;">{{ r.type }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- RIGHT: SUMMARY -->
+    <div style="position:sticky;top:72px;">
+
+      <!-- SKILL BREAKDOWN -->
+      {% if skill_scores %}
+      <div class="card mb-24">
+        <div class="section-header" style="margin-bottom:20px;">
+          <h3 class="section-title" style="font-size:1.1rem;">Skill Breakdown</h3>
+        </div>
+        {% for label, score in skill_scores.items %}
+        <div class="skill-row">
+          <div class="skill-name" style="min-width:160px;">{{ label }}</div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-fill" style="width:{{ score }}%;background:{% if score >= 80 %}var(--accent-green){% elif score >= 60 %}var(--accent-orange){% else %}var(--accent-red){% endif %}"></div>
+          </div>
+          <div class="skill-score" style="color:{% if score >= 80 %}var(--accent-green){% elif score >= 60 %}var(--accent-orange){% else %}var(--accent-red){% endif %}">{{ score }}%</div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- WEAK AREAS -->
+      {% if weak_areas %}
+      <div class="card mb-24">
+        <div class="section-header" style="margin-bottom:16px;">
+          <h3 class="section-title" style="font-size:1.1rem;">Focus These Skills</h3>
+          <p class="section-subtitle" style="font-size:0.8125rem;">Areas scoring below 70%</p>
+        </div>
+        {% for label, score in weak_areas %}
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px 12px;background:rgba(255,69,58,0.08);border:1px solid rgba(255,69,58,0.2);border-radius:8px;">
+          <span style="font-size:16px;">&#128680;</span>
+          <div>
+            <div style="font-size:0.875rem;font-weight:600;color:var(--text-primary);">{{ label }}</div>
+            <div style="font-size:0.8125rem;color:var(--accent-red);">{{ score }}% accuracy</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- NEXT STEPS -->
+      <div class="card mb-24">
+        <div class="section-header" style="margin-bottom:16px;">
+          <h3 class="section-title" style="font-size:1.1rem;">Next Steps</h3>
+        </div>
+        {% if attempt.estimated_ged_score >= 190 %}
+        <p style="font-size:0.9375rem;color:var(--accent-green);font-weight:500;margin-bottom:12px;">Excellent! You're at mastery level. Take Test {{ attempt.test.number|add:"1" }} to confirm.</p>
+        {% elif attempt.estimated_ged_score >= 175 %}
+        <p style="font-size:0.9375rem;color:var(--text-secondary);margin-bottom:12px;">Great work! You're college-ready. Push to 190+ with more practice.</p>
+        {% elif attempt.estimated_ged_score >= 145 %}
+        <p style="font-size:0.9375rem;color:var(--text-secondary);margin-bottom:12px;">You're at a passing level. Focus on your weak areas to reach college-ready status.</p>
+        {% else %}
+        <p style="font-size:0.9375rem;color:var(--text-secondary);margin-bottom:12px;">Review the explanations for missed questions and retry this test before moving on.</p>
+        {% endif %}
+
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          {% if attempt.test.number < 10 %}
+          <a href="{% url 'exam:start_exam' attempt.test.number|add:"1" %}" class="btn btn-primary w-full">Next Test &rarr;</a>
+          {% endif %}
+          <a href="{% url 'exam:start_exam' attempt.test.number %}" class="btn btn-secondary w-full">Retake This Test</a>
+          <a href="{% url 'dashboard:home' %}" class="btn btn-secondary w-full">Back to Dashboard</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div style="height:48px;"></div>
+</div>
+
+<script src="{% static 'js/exam.js' %}"></script>
+{% endblock %}

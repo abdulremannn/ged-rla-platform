@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ test.title }} — GED RLA Prep</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'css/exam.css' %}">
+</head>
+<body>
+
+<!-- TOP NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div>
+      <div class="exam-title">{{ test.title }}</div>
+      <div class="exam-subtitle">{{ test.difficulty_label }} &middot; GED RLA</div>
+    </div>
+    <div class="timer-display">
+      <span class="timer-icon">&#9203;</span>
+      <span class="timer-value" id="timer-display">{{ time_remaining|default:"9000" }}</span>
+    </div>
+    <div class="exam-progress">
+      <div id="progress-bar-wrap" style="width:120px;height:4px;background:var(--bg-elevated);border-radius:2px;overflow:hidden;">
+        <div id="progress-fill" class="progress-fill" style="width:0%"></div>
+      </div>
+      <span id="answered-count"><strong>0</strong> of {{ total_questions }}</span>
+    </div>
+  </div>
+</nav>
+
+<!-- EXAM LAYOUT -->
+<div class="exam-layout" style="padding-top:52px;">
+
+  <!-- MAIN QUESTION AREA -->
+  <div class="exam-main" id="question-card">
+    <div class="question-container">
+
+      <!-- PASSAGE (shown if question has one) -->
+      <div id="passage-container" class="passage-card" style="display:none;">
+        <div class="passage-header">
+          <div>
+            <div class="passage-title" id="passage-title"></div>
+            <div class="passage-meta" id="passage-meta"></div>
+          </div>
+          <span class="badge badge-blue" style="flex-shrink:0;">Passage</span>
+        </div>
+        <div class="passage-text" id="passage-text"></div>
+        <button class="passage-expand-btn" id="passage-expand-btn" onclick="togglePassage()">
+          <span id="passage-expand-text">Show full passage</span> &#8964;
+        </button>
+      </div>
+
+      <!-- QUESTION CARD -->
+      <div class="question-card animate-fade-in">
+        <div class="question-header">
+          <div>
+            <div class="question-num" id="question-num">Question 1 of {{ total_questions }}</div>
+          </div>
+          <span class="question-skill-badge" id="question-skill"></span>
+        </div>
+
+        <div class="question-text" id="question-text"></div>
+
+        <div class="options-list" id="options-list"></div>
+
+        <div class="question-actions">
+          <button class="flag-btn" id="flag-btn">
+            <span>&#9876;</span> Flag for Review
+          </button>
+          <div class="nav-buttons">
+            <button class="btn btn-secondary" id="prev-btn">&larr; Previous</button>
+            <button class="btn btn-primary" id="next-btn">Next &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="exam-sidebar">
+
+    <!-- QUESTION PALETTE -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Question Navigator</div>
+      <div class="question-palette" id="question-palette"></div>
+      <div class="palette-legend">
+        <div class="legend-item"><div class="legend-dot current"></div>Current</div>
+        <div class="legend-item"><div class="legend-dot answered"></div>Answered</div>
+        <div class="legend-item"><div class="legend-dot flagged"></div>Flagged</div>
+        <div class="legend-item"><div class="legend-dot unanswered"></div>Unanswered</div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <div class="answered-count" id="answered-count-sidebar">
+        <strong>0</strong> of {{ total_questions }} answered
+      </div>
+      <button class="btn btn-danger w-full" id="submit-btn">Submit Test</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- SUBMIT CONFIRMATION MODAL -->
+<div class="modal-overlay" id="submit-modal">
+  <div class="modal">
+    <h2 class="modal-title">Submit Your Test?</h2>
+    <div class="modal-body" id="modal-body">
+      <p>Are you sure you want to submit? This cannot be undone.</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="cancel-submit">Continue Reviewing</button>
+      <button class="btn btn-danger" id="confirm-submit-btn">Submit Test</button>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/exam.js' %}"></script>
+<script>
+function togglePassage() {
+  const pt = document.getElementById('passage-text');
+  const btn = document.getElementById('passage-expand-text');
+  pt.classList.toggle('expanded');
+  btn.textContent = pt.classList.contains('expanded') ? 'Show less' : 'Show full passage';
+}
+
+// Initialize exam
+const EXAM_CONFIG = {
+  attemptId: {{ attempt.id }},
+  totalQuestions: {{ total_questions }},
+  timeRemaining: {{ time_remaining }},
+  questions: {{ questions_data|safe }},
+  csrfToken: '{{ csrf_token }}',
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  window.examEngine = new GEDExam(EXAM_CONFIG);
+});
+</script>
+</body>
+</html>

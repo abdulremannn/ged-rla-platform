@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Start {{ test.title }}{% endblock %}
+{% block content %}
+<div class="container-narrow" style="padding-top:48px;padding-bottom:48px;">
+  <a href="{% url 'dashboard:home' %}" style="display:inline-flex;align-items:center;gap:6px;font-size:0.875rem;color:var(--text-tertiary);margin-bottom:32px;">&larr; Back to Dashboard</a>
+  <div class="card animate-fade-in" style="padding:40px;">
+    <div style="margin-bottom:32px;">
+      <div style="font-size:0.75rem;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Practice Test {{ test.number }}</div>
+      <h1 style="font-size:2rem;font-weight:700;color:var(--text-primary);margin-bottom:8px;">{{ test.title }}</h1>
+      <p style="color:var(--text-tertiary);font-size:1rem;">{{ test.description }}</p>
+    </div>
+    <div class="exam-info-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;">
+      <div style="background:var(--bg-elevated);border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:1.5rem;margin-bottom:6px;">&#128337;</div>
+        <div style="font-size:1.25rem;font-weight:700;color:var(--text-primary);">{{ test.time_limit_minutes }}</div>
+        <div style="font-size:0.8125rem;color:var(--text-tertiary);">Minutes</div>
+      </div>
+      <div style="background:var(--bg-elevated);border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:1.5rem;margin-bottom:6px;">&#10067;</div>
+        <div style="font-size:1.25rem;font-weight:700;color:var(--text-primary);">{{ question_count }}</div>
+        <div style="font-size:0.8125rem;color:var(--text-tertiary);">Questions</div>
+      </div>
+      <div style="background:var(--bg-elevated);border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:1.5rem;margin-bottom:6px;">&#127919;</div>
+        <div style="font-size:1.25rem;font-weight:700;color:var(--accent-blue);">{{ test.difficulty_label }}</div>
+        <div style="font-size:0.8125rem;color:var(--text-tertiary);">Difficulty</div>
+      </div>
+    </div>
+    <div style="background:rgba(0,113,227,0.08);border:1px solid rgba(0,113,227,0.2);border-radius:12px;padding:20px;margin-bottom:32px;">
+      <h3 style="font-size:0.9375rem;font-weight:600;color:var(--accent-blue);margin-bottom:12px;">&#8505; Test Instructions</h3>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+        <li style="font-size:0.9375rem;color:var(--text-secondary);display:flex;gap:8px;"><span>&#10003;</span> Timer starts immediately when you click Begin.</li>
+        <li style="font-size:0.9375rem;color:var(--text-secondary);display:flex;gap:8px;"><span>&#10003;</span> Navigate freely between questions using the sidebar palette.</li>
+        <li style="font-size:0.9375rem;color:var(--text-secondary);display:flex;gap:8px;"><span>&#10003;</span> Flag questions for review before final submission.</li>
+        <li style="font-size:0.9375rem;color:var(--text-secondary);display:flex;gap:8px;"><span>&#10003;</span> Answers are saved automatically as you work.</li>
+        <li style="font-size:0.9375rem;color:var(--text-secondary);display:flex;gap:8px;"><span>&#10003;</span> Test auto-submits when time expires.</li>
+        <li style="font-size:0.9375rem;color:var(--text-secondary);display:flex;gap:8px;"><span>&#10003;</span> Press 1-4 to select answers, arrow keys to navigate.</li>
+      </ul>
+    </div>
+    {% if existing_attempt %}
+    <div style="background:rgba(255,159,10,0.1);border:1px solid rgba(255,159,10,0.3);border-radius:12px;padding:16px;margin-bottom:24px;">
+      <p style="font-size:0.9375rem;color:var(--accent-orange);font-weight:500;margin-bottom:4px;">&#9888; You have an in-progress attempt for this test.</p>
+      <p style="font-size:0.875rem;color:var(--text-tertiary);">Started: {{ existing_attempt.started_at|date:"M d, Y g:i A" }}</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <form method="post">{% csrf_token %}<input type="hidden" name="action" value="resume"><button type="submit" class="btn btn-primary btn-lg w-full">Resume Test</button></form>
+      <form method="post">{% csrf_token %}<input type="hidden" name="action" value="new"><button type="submit" class="btn btn-secondary btn-lg w-full">Start Fresh</button></form>
+    </div>
+    {% else %}
+    <form method="post">{% csrf_token %}<input type="hidden" name="action" value="new"><button type="submit" class="btn btn-primary btn-lg w-full">Begin Test &rarr;</button></form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="dashboard-hero animate-fade-in">
+    <p class="hero-greeting">GED RLA Preparation Platform</p>
+    <h1 class="hero-title">Welcome back, {{ user.first_name|default:user.username }}</h1>
+    <p class="hero-sub">{% if best_score %}Your best estimated GED score: <strong style="color:var(--accent-green)">{{ best_score }}</strong> &mdash; Keep pushing toward 190+{% else %}Start with Practice Test 1 to establish your baseline performance.{% endif %}</p>
+  </div>
+
+  <div class="stat-grid mb-32">
+    <div class="stat-card">
+      <div class="stat-label">Tests Completed</div>
+      <div class="stat-value">{{ completed_count }}</div>
+      <div class="stat-sub">of 10 available</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Best GED Score</div>
+      <div class="stat-value {% if best_score %}{% if best_score >= 175 %}score-high{% elif best_score >= 145 %}score-mid{% else %}score-low{% endif %}{% endif %}">{{ best_score|default:"&mdash;" }}</div>
+      <div class="stat-sub">target: 190+</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Average Score</div>
+      <div class="stat-value {% if avg_score %}{% if avg_score >= 175 %}score-high{% elif avg_score >= 145 %}score-mid{% else %}score-low{% endif %}{% endif %}">{{ avg_score|default:"&mdash;" }}</div>
+      <div class="stat-sub">GED scaled score</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Study Streak</div>
+      <div class="stat-value">{{ profile.study_streak_days }}</div>
+      <div class="stat-sub">days in a row</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Study Time</div>
+      <div class="stat-value" style="font-size:1.5rem;">{{ profile.total_study_minutes }}</div>
+      <div class="stat-sub">total minutes</div>
+    </div>
+  </div>
+
+  <div class="dashboard-main-grid" style="display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;">
+    <div>
+      <div class="section-header">
+        <h2 class="section-title">Practice Test Library</h2>
+        <p class="section-subtitle">10 full-length exams &middot; 150 minutes each &middot; ~45 questions per test</p>
+      </div>
+      <div class="test-grid">
+        {% for item in test_data %}
+        <a href="{% url 'exam:start_exam' item.test.number %}" class="test-card {% if item.status == 'completed' %}completed{% elif item.status == 'in_progress' %}in-progress{% endif %}">
+          <div class="test-num">Practice Test {{ item.test.number }}</div>
+          <div class="test-title">{{ item.test.title }}</div>
+          <div class="test-difficulty">{{ item.test.difficulty_label }} &middot; {{ item.test.time_limit_minutes }} min</div>
+          <div class="test-footer">
+            {% if item.status == 'completed' %}
+              <div>
+                <div class="test-score" style="color:{% if item.score >= 175 %}var(--accent-green){% elif item.score >= 145 %}var(--accent-orange){% else %}var(--accent-red){% endif %}">{{ item.score }}</div>
+                <div style="font-size:0.75rem;color:var(--text-tertiary);">GED Score</div>
+              </div>
+              <span class="badge badge-green">&#10003; Done</span>
+            {% elif item.status == 'in_progress' %}
+              <div style="font-size:0.875rem;color:var(--accent-orange);">In Progress</div>
+              <span class="badge badge-orange">Resume</span>
+            {% else %}
+              <div style="font-size:0.875rem;color:var(--text-tertiary);">Not started</div>
+              <span class="badge badge-gray">Begin</span>
+            {% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div>
+      {% if category_scores %}
+      <div class="card mb-24">
+        <div class="section-header" style="margin-bottom:20px;">
+          <h3 class="section-title" style="font-size:1.1rem;">Skill Breakdown</h3>
+          <p class="section-subtitle" style="font-size:0.8125rem;">Average across completed tests</p>
+        </div>
+        {% for label, score in category_scores.items %}
+        <div class="skill-row">
+          <div class="skill-name">{{ label }}</div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar-fill" style="width:{{ score }}%;background:{% if score >= 80 %}var(--accent-green){% elif score >= 60 %}var(--accent-orange){% else %}var(--accent-red){% endif %}"></div>
+          </div>
+          <div class="skill-score" style="color:{% if score >= 80 %}var(--accent-green){% elif score >= 60 %}var(--accent-orange){% else %}var(--accent-red){% endif %}">{{ score }}%</div>
+        </div>
+        {% endfor %}
+        <div style="margin-top:16px;"><a href="{% url 'dashboard:analytics' %}" class="btn btn-secondary btn-sm w-full">View Full Analytics</a></div>
+      </div>
+      {% endif %}
+
+      {% if recommendations %}
+      <div class="mb-24">
+        <div class="section-header" style="margin-bottom:16px;">
+          <h3 class="section-title" style="font-size:1.1rem;">Focus Areas</h3>
+          <p class="section-subtitle" style="font-size:0.8125rem;">Personalized recommendations</p>
+        </div>
+        {% for rec in recommendations %}
+        <div class="rec-card">
+          <div class="rec-icon">&#128204;</div>
+          <div class="rec-content">
+            <h4>{{ rec.area }} &mdash; {{ rec.score }}%</h4>
+            <p>{{ rec.tip }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="card mb-24">
+        <div style="text-align:center;padding:20px 0;">
+          <div style="font-size:2.5rem;margin-bottom:12px;">&#127919;</div>
+          <h3 style="font-size:1rem;color:var(--text-primary);margin-bottom:8px;">Get Personalized Tips</h3>
+          <p style="font-size:0.875rem;color:var(--text-tertiary);line-height:1.6;">Complete your first exam to receive detailed recommendations.</p>
+          <a href="{% url 'exam:start_exam' 1 %}" class="btn btn-primary btn-sm" style="margin-top:16px;">Take Test 1</a>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if score_trend %}
+      <div class="card mb-24">
+        <div class="section-header" style="margin-bottom:16px;"><h3 class="section-title" style="font-size:1.1rem;">Score Trend</h3></div>
+        <div style="display:flex;align-items:flex-end;gap:5px;height:64px;padding:0 2px;">
+          {% for s in score_trend %}
+          <div style="flex:1;background:var(--accent-blue);border-radius:3px 3px 0 0;opacity:0.8;height:{% widthratio s 200 100 %}%;min-height:6px;" title="GED Score: {{ s }}"></div>
+          {% endfor %}
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;">
+          {% for s in score_trend %}<div style="text-align:center;flex:1;font-size:0.6875rem;font-weight:600;color:var(--text-secondary);">{{ s }}</div>{% endfor %}
+        </div>
+        <p style="font-size:0.75rem;color:var(--text-tertiary);margin-top:8px;">Last {{ score_trend|length }} completed tests</p>
+      </div>
+      {% endif %}
+
+      <div class="card">
+        <div class="section-header" style="margin-bottom:16px;"><h3 class="section-title" style="font-size:1.1rem;">GED Score Scale</h3></div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(52,199,89,0.1);border-radius:8px;border:1px solid rgba(52,199,89,0.2);"><span style="font-size:0.875rem;color:var(--accent-green);font-weight:600;">175&ndash;200</span><span style="font-size:0.8125rem;color:var(--text-tertiary);">College Ready / Mastery</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(52,199,89,0.07);border-radius:8px;border:1px solid rgba(52,199,89,0.12);"><span style="font-size:0.875rem;color:#4cd964;font-weight:600;">165&ndash;174</span><span style="font-size:0.8125rem;color:var(--text-tertiary);">College Ready</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,159,10,0.1);border-radius:8px;border:1px solid rgba(255,159,10,0.2);"><span style="font-size:0.875rem;color:var(--accent-orange);font-weight:600;">145&ndash;164</span><span style="font-size:0.8125rem;color:var(--text-tertiary);">Passing</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,69,58,0.1);border-radius:8px;border:1px solid rgba(255,69,58,0.2);"><span style="font-size:0.875rem;color:var(--accent-red);font-weight:600;">100&ndash;144</span><span style="font-size:0.8125rem;color:var(--text-tertiary);">Below Passing</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="height:48px;"></div>
+</div>
+{% endblock %}

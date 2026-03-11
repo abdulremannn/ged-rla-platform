@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Analytics{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="dashboard-hero">
+    <p class="hero-greeting">Performance Analytics</p>
+    <h1 class="hero-title">Your Progress Report</h1>
+    <p class="hero-sub">Detailed breakdown of your GED RLA performance across all tests.</p>
+  </div>
+
+  {% if not attempts %}
+  <div class="card" style="text-align:center;padding:48px;">
+    <div style="font-size:3rem;margin-bottom:16px;">&#128202;</div>
+    <h2 style="color:var(--text-primary);margin-bottom:12px;">No Data Yet</h2>
+    <p style="color:var(--text-tertiary);margin-bottom:24px;">Complete at least one practice test to see your analytics.</p>
+    <a href="{% url 'exam:start_exam' 1 %}" class="btn btn-primary">Start Practice Test 1</a>
+  </div>
+  {% else %}
+
+  <div class="card mb-24">
+    <div class="section-header" style="margin-bottom:24px;">
+      <h2 class="section-title" style="font-size:1.375rem;">Score History</h2>
+    </div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border-primary);">
+            <th style="text-align:left;padding:10px 12px;font-size:0.8125rem;color:var(--text-tertiary);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;">Test</th>
+            <th style="text-align:left;padding:10px 12px;font-size:0.8125rem;color:var(--text-tertiary);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;">GED Score</th>
+            <th style="text-align:left;padding:10px 12px;font-size:0.8125rem;color:var(--text-tertiary);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;">% Correct</th>
+            <th style="text-align:left;padding:10px 12px;font-size:0.8125rem;color:var(--text-tertiary);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;">Band</th>
+            <th style="text-align:left;padding:10px 12px;font-size:0.8125rem;color:var(--text-tertiary);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;">Date</th>
+            <th style="text-align:left;padding:10px 12px;font-size:0.8125rem;color:var(--text-tertiary);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for attempt in attempts %}
+          <tr style="border-bottom:1px solid var(--border-primary);">
+            <td style="padding:14px 12px;font-size:0.9375rem;color:var(--text-primary);font-weight:500;">{{ attempt.test.title }}</td>
+            <td style="padding:14px 12px;"><span style="font-size:1.25rem;font-weight:700;color:{% if attempt.estimated_ged_score >= 175 %}var(--accent-green){% elif attempt.estimated_ged_score >= 145 %}var(--accent-orange){% else %}var(--accent-red){% endif %}">{{ attempt.estimated_ged_score|default:"—" }}</span></td>
+            <td style="padding:14px 12px;font-size:0.9375rem;color:var(--text-secondary);">{{ attempt.percentage_score|default:"—" }}%</td>
+            <td style="padding:14px 12px;">
+              {% if attempt.estimated_ged_score %}{% if attempt.estimated_ged_score >= 175 %}<span class="badge badge-green">Mastery</span>{% elif attempt.estimated_ged_score >= 165 %}<span class="badge badge-green">College Ready</span>{% elif attempt.estimated_ged_score >= 145 %}<span class="badge badge-orange">Passing</span>{% else %}<span class="badge badge-red">Below Pass</span>{% endif %}{% endif %}
+            </td>
+            <td style="padding:14px 12px;font-size:0.875rem;color:var(--text-tertiary);">{{ attempt.completed_at|date:"M d, Y"|default:"—" }}</td>
+            <td style="padding:14px 12px;"><a href="{% url 'exam:results' attempt.id %}" class="btn btn-secondary btn-sm">Review</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if skill_history %}
+  <div class="card mb-24">
+    <div class="section-header" style="margin-bottom:24px;">
+      <h2 class="section-title" style="font-size:1.375rem;">Skill Category Analysis</h2>
+    </div>
+    {% for label, scores in skill_history.items %}
+    <div style="margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:0.9375rem;font-weight:500;color:var(--text-primary);">{{ label }}</span>
+        {% with latest=scores|last %}<span style="font-size:0.875rem;font-weight:600;color:{% if latest >= 80 %}var(--accent-green){% elif latest >= 60 %}var(--accent-orange){% else %}var(--accent-red){% endif %}">{{ latest }}%</span>{% endwith %}
+      </div>
+      {% with latest=scores|last %}
+      <div class="progress-bar" style="height:8px;"><div class="progress-fill" style="width:{{ latest }}%;background:{% if latest >= 80 %}var(--accent-green){% elif latest >= 60 %}var(--accent-orange){% else %}var(--accent-red){% endif %}"></div></div>
+      {% endwith %}
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        {% for s in scores %}<div style="background:rgba(0,113,227,0.15);border-radius:4px;padding:2px 8px;font-size:0.75rem;color:var(--accent-blue);font-weight:500;">{{ s }}%</div>{% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="card mb-24" style="background:linear-gradient(135deg,rgba(0,113,227,0.08),rgba(0,113,227,0.02));border-color:rgba(0,113,227,0.2);">
+    <div class="section-header" style="margin-bottom:20px;"><h2 class="section-title" style="font-size:1.375rem;">Your Path to 190+</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
+      <div style="background:var(--bg-card);border-radius:12px;padding:16px;">
+        <div style="font-size:0.75rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Baseline Score</div>
+        <div style="font-size:1.75rem;font-weight:700;color:var(--accent-red);">{{ profile.baseline_score }}</div>
+        <div style="font-size:0.8125rem;color:var(--text-tertiary);">GED Ready result</div>
+      </div>
+      <div style="background:var(--bg-card);border-radius:12px;padding:16px;">
+        <div style="font-size:0.75rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Current Best</div>
+        <div style="font-size:1.75rem;font-weight:700;color:var(--accent-green);">{{ profile.get_best_score|default:"—" }}</div>
+        <div style="font-size:0.8125rem;color:var(--text-tertiary);">Practice high score</div>
+      </div>
+      <div style="background:var(--bg-card);border-radius:12px;padding:16px;">
+        <div style="font-size:0.75rem;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Target Score</div>
+        <div style="font-size:1.75rem;font-weight:700;color:var(--accent-blue);">{{ profile.target_score }}</div>
+        <div style="font-size:0.8125rem;color:var(--text-tertiary);">Mastery Level</div>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+  <div style="height:48px;"></div>
+</div>
+{% endblock %}

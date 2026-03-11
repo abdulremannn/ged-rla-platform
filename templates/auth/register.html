@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — GED RLA Prep</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card animate-fade-in">
+    <div class="auth-logo">
+      <div class="logo-mark">GED</div>
+      <h1>Start preparing</h1>
+      <p>Create your account to track progress toward 190+</p>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary btn-lg w-full" style="margin-top:8px;">Create Account →</button>
+    </form>
+
+    <p style="text-align:center;margin-top:24px;font-size:0.9375rem;color:var(--text-tertiary);">
+      Already have an account?
+      <a href="{% url 'dashboard:login' %}" style="color:var(--text-primary);font-weight:600;text-decoration:underline;text-underline-offset:3px;">Sign in</a>
+    </p>
+  </div>
+</div>
+</body>
+</html>
