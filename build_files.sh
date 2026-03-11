@@ -1,6 +1,6 @@
 #!/bin/bash
 
-uv pip install -r requirements.txt --system
+pip install -r requirements.txt --break-system-packages
 python3 manage.py collectstatic --noinput
 python3 manage.py migrate --noinput
 python3 manage.py populate_tests
