@@ -10,12 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
   <style>
-    /* ── LANDING PAGE SPECIFIC STYLES ── */
+    *, *::before, *::after { box-sizing: border-box; }
 
+    /* NAV */
     .landing-nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      height: 60px;
-      background: var(--bg-dark);
+      height: 60px; background: var(--bg-dark);
       display: flex; align-items: center; padding: 0 48px;
     }
     .landing-nav-inner {
@@ -23,42 +23,25 @@
       display: flex; align-items: center; justify-content: space-between;
     }
     .landing-brand {
-      font-family: var(--font-display);
-      font-size: 1.25rem; font-weight: 700;
-      color: #f2ede5;
-      display: flex; align-items: center; gap: 10px;
-      text-decoration: none;
+      font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;
+      color: #f2ede5; display: flex; align-items: center; gap: 10px; text-decoration: none;
     }
     .landing-brand-icon {
-      width: 32px; height: 32px;
-      background: var(--accent-lime);
-      border-radius: 7px;
+      width: 32px; height: 32px; background: var(--accent-lime); border-radius: 7px;
       display: flex; align-items: center; justify-content: center;
       font-family: var(--font-body); font-size: 9px; font-weight: 900;
-      color: #1a1a18; letter-spacing: -0.5px;
+      color: #1a1a18; letter-spacing: -0.5px; flex-shrink: 0;
     }
-    .landing-nav-links {
-      display: flex; align-items: center; gap: 32px; list-style: none;
-    }
-    .landing-nav-links a {
-      color: rgba(242,237,229,0.6); font-size: 0.875rem;
-      text-decoration: none; transition: color 0.2s;
-    }
+    .landing-nav-links { display: flex; align-items: center; gap: 32px; list-style: none; margin: 0; padding: 0; }
+    .landing-nav-links a { color: rgba(242,237,229,0.6); font-size: 0.875rem; text-decoration: none; transition: color 0.2s; white-space: nowrap; }
     .landing-nav-links a:hover { color: #f2ede5; }
-    .landing-nav-actions { display: flex; align-items: center; gap: 12px; }
+    .landing-nav-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 
-    /* HERO SECTION */
-    .hero {
-      padding: 160px 0 100px;
-      background: var(--bg-primary);
-      position: relative; overflow: hidden;
-    }
+    /* HERO */
+    .hero { padding: 140px 0 80px; background: var(--bg-primary); position: relative; overflow: hidden; }
     .hero::before {
-      content: '';
-      position: absolute; top: -200px; right: -200px;
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(212,224,74,0.08) 0%, transparent 70%);
-      pointer-events: none;
+      content: ''; position: absolute; top: -200px; right: -200px; width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(212,224,74,0.08) 0%, transparent 70%); pointer-events: none;
     }
     .hero-container {
       max-width: 1340px; margin: 0 auto; padding: 0 48px;
@@ -66,62 +49,36 @@
     }
     .hero-eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(212,224,74,0.12);
-      border: 1px solid rgba(212,224,74,0.25);
+      background: rgba(212,224,74,0.12); border: 1px solid rgba(212,224,74,0.25);
       border-radius: 980px; padding: 6px 14px;
       font-size: 0.8125rem; font-weight: 600; color: #6a7a10;
-      letter-spacing: 0.04em; text-transform: uppercase;
-      margin-bottom: 24px;
+      letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 24px;
     }
-    .hero-eyebrow-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #8a9a20; animation: pulse-dot 2s infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
+    .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: #8a9a20; animation: pulse-dot 2s infinite; }
+    @keyframes pulse-dot { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.8); } }
     .hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(2.8rem, 5vw, 4.2rem);
-      font-weight: 700; line-height: 1.05;
-      letter-spacing: -0.03em; color: var(--text-primary);
-      margin-bottom: 24px;
+      font-family: var(--font-display); font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+      font-weight: 700; line-height: 1.05; letter-spacing: -0.03em; color: var(--text-primary); margin-bottom: 24px;
     }
-    .hero-title span {
-      color: transparent;
-      -webkit-text-stroke: 1.5px var(--text-primary);
-    }
-    .hero-subtitle {
-      font-size: 1.125rem; color: var(--text-secondary);
-      line-height: 1.75; max-width: 480px; margin-bottom: 40px;
-    }
+    .hero-title span { color: transparent; -webkit-text-stroke: 1.5px var(--text-primary); }
+    .hero-subtitle { font-size: 1.0625rem; color: var(--text-secondary); line-height: 1.75; max-width: 480px; margin-bottom: 40px; }
     .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
     .hero-stats {
-      display: flex; align-items: center; gap: 32px; margin-top: 48px;
-      padding-top: 40px; border-top: 1px solid var(--border-primary);
+      display: flex; align-items: center; gap: 28px; margin-top: 48px;
+      padding-top: 40px; border-top: 1px solid var(--border-primary); flex-wrap: wrap;
     }
-    .hero-stat-value {
-      font-family: var(--font-display); font-size: 2rem;
-      font-weight: 700; color: var(--text-primary); line-height: 1;
-    }
+    .hero-stat-value { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
     .hero-stat-label { font-size: 0.8125rem; color: var(--text-tertiary); margin-top: 4px; }
+    .hero-stat-divider { width: 1px; height: 40px; background: var(--border-primary); flex-shrink: 0; }
 
     /* HERO VISUAL */
-    .hero-visual {
-      position: relative;
-      display: flex; align-items: center; justify-content: center;
-    }
+    .hero-visual { position: relative; display: flex; align-items: center; justify-content: center; }
     .hero-image-wrap { position: relative; width: 100%; }
     .hero-image-frame {
-      width: 100%; aspect-ratio: 4/5;
-      border-radius: var(--radius-xl);
+      width: 100%; aspect-ratio: 4/5; border-radius: var(--radius-xl);
       overflow: hidden; box-shadow: var(--shadow-lg); position: relative;
     }
-    .hero-image-frame img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: center top; display: block;
-    }
+    .hero-image-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
     .hero-image-frame::after {
       content: ''; position: absolute; inset: 0;
       background: linear-gradient(to bottom, transparent 50%, rgba(26,26,24,0.4) 100%);
@@ -130,13 +87,11 @@
       position: absolute; bottom: 28px; left: -28px;
       background: var(--bg-card); border: 1px solid var(--border-primary);
       border-radius: var(--radius-md); padding: 16px 20px;
-      box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 12px; min-width: 220px;
+      box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 12px; min-width: 200px;
     }
     .hero-card-floating-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: rgba(45,106,45,0.1);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; flex-shrink: 0;
+      width: 36px; height: 36px; border-radius: 10px; background: rgba(45,106,45,0.1);
+      display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
     }
     .hero-card-floating-text { color: var(--text-primary); font-size: 0.875rem; font-weight: 600; }
     .hero-card-floating-sub { color: var(--accent-green); font-size: 0.8125rem; margin-top: 2px; font-weight: 500; }
@@ -144,74 +99,53 @@
       position: absolute; top: 28px; right: -28px;
       background: var(--bg-dark); border: 1px solid rgba(255,255,255,0.08);
       border-radius: var(--radius-md); padding: 14px 18px;
-      box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px; min-width: 180px;
+      box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px; min-width: 170px;
     }
     .hero-card-floating-2-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: rgba(212,224,74,0.15);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; flex-shrink: 0;
+      width: 32px; height: 32px; border-radius: 8px; background: rgba(212,224,74,0.15);
+      display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;
     }
     .hero-card-floating-2-text { color: #f2ede5; font-size: 0.8125rem; font-weight: 600; }
     .hero-card-floating-2-sub { color: rgba(242,237,229,0.5); font-size: 0.75rem; margin-top: 2px; }
 
     /* TRUSTED BAR */
-    .trusted-bar { background: var(--bg-dark); padding: 20px 48px; }
-    .trusted-bar-inner {
-      max-width: 1340px; margin: 0 auto;
-      display: flex; align-items: center; gap: 48px; flex-wrap: wrap;
-    }
-    .trusted-bar-label {
-      font-size: 0.75rem; font-weight: 600;
-      color: rgba(242,237,229,0.4); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap;
-    }
-    .trusted-bar-unis { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+    .trusted-bar { background: var(--bg-dark); padding: 18px 48px; overflow: hidden; }
+    .trusted-bar-inner { max-width: 1340px; margin: 0 auto; display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+    .trusted-bar-label { font-size: 0.75rem; font-weight: 600; color: rgba(242,237,229,0.4); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+    .trusted-bar-unis { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
     .trusted-uni { font-size: 0.875rem; font-weight: 600; color: rgba(242,237,229,0.5); white-space: nowrap; }
 
-    /* SECTION SHARED */
-    .section { padding: 100px 0; }
+    /* SECTIONS */
+    .section { padding: 88px 0; }
     .section-alt { background: var(--bg-secondary); }
-    .section-dark { background: var(--bg-dark); }
     .section-container { max-width: 1340px; margin: 0 auto; padding: 0 48px; }
-    .section-label {
-      font-size: 0.75rem; font-weight: 700;
-      color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 16px;
-    }
+    .section-label { font-size: 0.75rem; font-weight: 700; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 16px; }
     .section-heading {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 3.5vw, 3rem);
-      font-weight: 600; line-height: 1.1;
-      letter-spacing: -0.02em; color: var(--text-primary); margin-bottom: 16px;
+      font-family: var(--font-display); font-size: clamp(1.75rem, 3vw, 3rem);
+      font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; color: var(--text-primary); margin-bottom: 16px;
     }
     .section-subheading { font-size: 1.0625rem; color: var(--text-tertiary); line-height: 1.7; max-width: 560px; }
 
     /* HOW IT WORKS */
-    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 64px; }
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 56px; }
     .step-card { position: relative; }
-    .step-num {
-      font-family: var(--font-display); font-size: 4rem; font-weight: 700;
-      line-height: 1; margin-bottom: 20px;
-      -webkit-text-stroke: 1px var(--border-strong); color: transparent;
-    }
-    .step-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+    .step-num { font-family: var(--font-display); font-size: 4rem; font-weight: 700; line-height: 1; margin-bottom: 20px; -webkit-text-stroke: 1px var(--border-strong); color: transparent; }
+    .step-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
     .step-desc { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.75; }
     .step-connector { position: absolute; top: 28px; right: -16px; width: 32px; height: 2px; background: var(--border-primary); }
-    .step-connector::after {
-      content: ''; position: absolute; right: -4px; top: -3px;
-      width: 8px; height: 8px; border-radius: 50%; background: var(--border-strong);
-    }
+    .step-connector::after { content: ''; position: absolute; right: -4px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--border-strong); }
 
     /* SUBJECTS */
-    .subjects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 64px; }
+    .subjects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 56px; }
     .subject-card {
       background: var(--bg-card); border: 1px solid var(--border-primary);
       border-radius: var(--radius-xl); overflow: hidden;
-      transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-      box-shadow: var(--shadow-card); position: relative;
+      transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: var(--shadow-card); position: relative; isolation: isolate;
     }
-    .subject-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-6px); }
-    .subject-card-top { padding: 32px 32px 24px; position: relative; }
-    .subject-card-bg { position: absolute; inset: 0; opacity: 0; transition: opacity 0.35s ease; }
+    .subject-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-5px); }
+    .subject-card-top { padding: 28px 28px 20px; position: relative; }
+    .subject-card-bg { position: absolute; inset: 0; opacity: 0; transition: opacity 0.35s ease; pointer-events: none; }
     .subject-card.rla .subject-card-bg { background: linear-gradient(135deg, rgba(45,106,45,0.06) 0%, transparent 60%); }
     .subject-card.math .subject-card-bg { background: linear-gradient(135deg, rgba(200,169,81,0.08) 0%, transparent 60%); }
     .subject-card.science .subject-card-bg { background: linear-gradient(135deg, rgba(74,144,217,0.08) 0%, transparent 60%); }
@@ -219,43 +153,34 @@
     .subject-card:hover .subject-card-bg { opacity: 1; }
     .subject-card-accent {
       position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
     }
     .subject-card:hover .subject-card-accent { transform: scaleX(1); }
     .subject-card.rla .subject-card-accent { background: var(--accent-green); }
     .subject-card.math .subject-card-accent { background: var(--accent-gold); }
     .subject-card.science .subject-card-accent { background: #4a90d9; }
     .subject-card.social .subject-card-accent { background: var(--accent-orange); }
-    .subject-card-header {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      margin-bottom: 16px; position: relative; z-index: 1;
-    }
+    .subject-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; position: relative; z-index: 1; }
     .subject-icon {
-      width: 56px; height: 56px; border-radius: var(--radius-md);
+      width: 52px; height: 52px; border-radius: var(--radius-md);
       display: flex; align-items: center; justify-content: center;
-      font-size: 24px; flex-shrink: 0; transition: transform 0.3s ease;
+      font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease;
     }
     .subject-card:hover .subject-icon { transform: scale(1.1) rotate(-3deg); }
     .subject-card.rla .subject-icon { background: rgba(45,106,45,0.1); }
     .subject-card.math .subject-icon { background: rgba(200,169,81,0.1); }
     .subject-card.science .subject-icon { background: rgba(74,144,217,0.1); }
     .subject-card.social .subject-icon { background: rgba(192,96,48,0.1); }
-    .subject-badge { font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .subject-badge { font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
     .badge-available { background: rgba(45,106,45,0.1); color: var(--accent-green); }
     .badge-coming { background: rgba(138,132,120,0.12); color: var(--text-tertiary); }
-    .subject-name { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; position: relative; z-index: 1; }
-    .subject-full-name { font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 12px; position: relative; z-index: 1; }
+    .subject-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; position: relative; z-index: 1; }
+    .subject-full-name { font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 10px; position: relative; z-index: 1; }
     .subject-desc { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.7; position: relative; z-index: 1; }
-    .subject-card-footer {
-      padding: 0 32px 24px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: relative; z-index: 1;
-    }
+    .subject-card-footer { padding: 0 28px 20px; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
     .subject-expand-btn {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 0.875rem; font-weight: 600; color: var(--text-tertiary);
-      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 600;
+      color: var(--text-tertiary); background: none; border: none; cursor: pointer;
       font-family: var(--font-body); transition: color 0.2s ease; padding: 0;
     }
     .subject-card.rla:hover .subject-expand-btn { color: var(--accent-green); }
@@ -266,21 +191,16 @@
     .subject-card:hover .subject-expand-arrow { transform: rotate(180deg); }
     .subject-tests-count { font-size: 0.8125rem; font-weight: 600; color: var(--text-tertiary); }
     .subject-expanded-body {
-      max-height: 0; overflow: hidden;
+      max-height: 0; overflow: hidden; opacity: 0; pointer-events: none;
       transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
-      opacity: 0;
     }
-    .subject-card:hover .subject-expanded-body { max-height: 300px; opacity: 1; }
-    .subject-features-inner {
-      padding: 20px 32px 28px;
-      border-top: 1px solid var(--border-primary);
-    }
-    .subject-features { display: flex; flex-direction: column; gap: 10px; }
-    .subject-feature { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-secondary); }
+    .subject-card:hover .subject-expanded-body { max-height: 280px; opacity: 1; pointer-events: auto; }
+    .subject-features-inner { padding: 18px 28px 24px; border-top: 1px solid var(--border-primary); }
+    .subject-features { display: flex; flex-direction: column; gap: 9px; }
+    .subject-feature { display: flex; align-items: center; gap: 10px; font-size: 0.875rem; color: var(--text-secondary); }
     .subject-feature-check {
-      width: 20px; height: 20px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; flex-shrink: 0;
+      width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0;
     }
     .subject-card.rla .subject-feature-check { background: rgba(45,106,45,0.12); color: var(--accent-green); }
     .subject-card.math .subject-feature-check { background: rgba(200,169,81,0.12); color: var(--accent-gold); }
@@ -288,40 +208,31 @@
     .subject-card.social .subject-feature-check { background: rgba(192,96,48,0.12); color: var(--accent-orange); }
 
     /* UNIVERSITIES */
-    .unis-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 56px; }
+    .unis-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 48px; }
     .uni-card {
       background: var(--bg-card); border: 1px solid var(--border-primary);
-      border-radius: var(--radius-lg); padding: 20px 24px;
-      display: flex; align-items: center; gap: 14px;
-      transition: all 0.2s ease; box-shadow: var(--shadow-card);
+      border-radius: var(--radius-lg); padding: 18px 20px;
+      display: flex; align-items: center; gap: 12px;
+      transition: all 0.2s ease; box-shadow: var(--shadow-card); min-width: 0;
     }
     .uni-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
     .uni-logo-wrap {
-      width: 44px; height: 44px; border-radius: 10px;
-      flex-shrink: 0;
+      width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-     }
-    .uni-logo-wrap img {
-      width: 100%; height: 100%; object-fit: contain;
-      filter: grayscale(1); opacity: 0.55;
-      transition: filter 0.25s ease, opacity 0.25s ease;
     }
-    .uni-card:hover .uni-logo-wrap img { filter: grayscale(0); opacity: 1; }
-    .uni-name { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+    .uni-name { font-size: 0.8125rem; font-weight: 600; color: var(--text-primary); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; }
     .uni-location { font-size: 0.75rem; color: var(--text-tertiary); margin-top: 2px; }
-    .unis-note { text-align: center; margin-top: 28px; font-size: 0.9375rem; color: var(--text-tertiary); }
+    .unis-note { text-align: center; margin-top: 24px; font-size: 0.9375rem; color: var(--text-tertiary); }
     .unis-note strong { color: var(--text-primary); }
 
     /* VS TABLE */
-    .vs-table {
-      width: 100%; border-collapse: collapse;
-      margin-top: 56px; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md);
-    }
-    .vs-table th { padding: 20px 28px; text-align: left; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.02em; }
+    .vs-table-wrap { width: 100%; overflow-x: auto; margin-top: 48px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); }
+    .vs-table { width: 100%; border-collapse: collapse; min-width: 540px; }
+    .vs-table th { padding: 18px 24px; text-align: left; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.02em; }
     .vs-table th:first-child { background: var(--bg-elevated); color: var(--text-tertiary); }
     .vs-table th.ours { background: var(--bg-dark); color: #f2ede5; }
     .vs-table th.theirs { background: var(--bg-card); color: var(--text-secondary); }
-    .vs-table td { padding: 16px 28px; font-size: 0.9375rem; border-top: 1px solid var(--border-primary); }
+    .vs-table td { padding: 14px 24px; font-size: 0.9375rem; border-top: 1px solid var(--border-primary); }
     .vs-table td:first-child { background: var(--bg-primary); color: var(--text-secondary); font-weight: 500; }
     .vs-table td.ours { background: rgba(26,26,24,0.03); color: var(--text-primary); font-weight: 600; }
     .vs-table td.theirs { background: var(--bg-card); color: var(--text-tertiary); }
@@ -329,10 +240,10 @@
     .cross { color: var(--accent-red); }
 
     /* PRICING */
-    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 64px; align-items: start; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; align-items: start; }
     .pricing-card {
       background: var(--bg-card); border: 1px solid var(--border-primary);
-      border-radius: var(--radius-xl); padding: 36px; position: relative;
+      border-radius: var(--radius-xl); padding: 32px; position: relative;
       transition: all 0.25s ease; box-shadow: var(--shadow-card);
     }
     .pricing-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
@@ -345,28 +256,28 @@
     }
     .pricing-plan { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-tertiary); margin-bottom: 12px; }
     .pricing-card.featured .pricing-plan { color: rgba(242,237,229,0.5); }
-    .pricing-price { font-family: var(--font-display); font-size: 3.2rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--text-primary); margin-bottom: 6px; }
+    .pricing-price { font-family: var(--font-display); font-size: 3rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--text-primary); margin-bottom: 6px; }
     .pricing-card.featured .pricing-price { color: #f2ede5; }
-    .pricing-price span { font-size: 1.5rem; font-weight: 400; }
-    .pricing-period { font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 28px; }
+    .pricing-price span { font-size: 1.4rem; font-weight: 400; }
+    .pricing-period { font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 24px; }
     .pricing-card.featured .pricing-period { color: rgba(242,237,229,0.4); }
-    .pricing-divider { height: 1px; background: var(--border-primary); margin-bottom: 24px; }
+    .pricing-divider { height: 1px; background: var(--border-primary); margin-bottom: 20px; }
     .pricing-card.featured .pricing-divider { background: rgba(255,255,255,0.08); }
-    .pricing-features { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .pricing-features { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
     .pricing-feature { display: flex; align-items: center; gap: 10px; font-size: 0.9375rem; color: var(--text-secondary); }
     .pricing-card.featured .pricing-feature { color: rgba(242,237,229,0.7); }
     .pricing-feature-icon { font-size: 14px; flex-shrink: 0; }
 
     /* TESTIMONIALS */
-    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 64px; }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
     .testimonial-card {
       background: var(--bg-card); border: 1px solid var(--border-primary);
-      border-radius: var(--radius-xl); padding: 32px;
+      border-radius: var(--radius-xl); padding: 28px;
       box-shadow: var(--shadow-card); transition: all 0.25s ease;
     }
     .testimonial-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-    .testimonial-stars { font-size: 14px; color: var(--accent-gold); margin-bottom: 16px; }
-    .testimonial-text { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px; font-style: italic; }
+    .testimonial-stars { font-size: 14px; color: var(--accent-gold); margin-bottom: 14px; }
+    .testimonial-text { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px; font-style: italic; }
     .testimonial-author { display: flex; align-items: center; gap: 12px; }
     .testimonial-avatar {
       width: 40px; height: 40px; border-radius: 50%; background: var(--bg-elevated);
@@ -376,52 +287,99 @@
     .testimonial-name { font-size: 0.9375rem; font-weight: 600; color: var(--text-primary); }
     .testimonial-score { font-size: 0.8125rem; color: var(--accent-green); margin-top: 2px; }
 
-    /* CTA SECTION */
-    .cta-section { background: var(--bg-dark); padding: 100px 0; text-align: center; position: relative; overflow: hidden; }
+    /* CTA */
+    .cta-section { background: var(--bg-dark); padding: 88px 0; text-align: center; position: relative; overflow: hidden; }
     .cta-section::before {
       content: ''; position: absolute; top: -300px; left: 50%; transform: translateX(-50%);
       width: 800px; height: 800px;
       background: radial-gradient(circle, rgba(212,224,74,0.06) 0%, transparent 70%); pointer-events: none;
     }
-    .cta-title { font-family: var(--font-display); font-size: clamp(2.4rem, 4vw, 3.6rem); font-weight: 700; color: #f2ede5; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 20px; }
-    .cta-sub { font-size: 1.125rem; color: rgba(242,237,229,0.6); max-width: 500px; margin: 0 auto 40px; line-height: 1.7; }
-    .cta-actions { display: flex; align-items: center; justify-content: center; gap: 16px; }
+    .cta-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.6rem); font-weight: 700; color: #f2ede5; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 20px; }
+    .cta-sub { font-size: 1.0625rem; color: rgba(242,237,229,0.6); max-width: 500px; margin: 0 auto 40px; line-height: 1.7; }
+    .cta-actions { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
     .btn-lime { background: var(--accent-lime); color: #1a1a18; font-weight: 700; border: none; }
     .btn-lime:hover { background: #c4d040; color: #1a1a18; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(212,224,74,0.3); opacity: 1; }
     .btn-outline-light { background: transparent; color: rgba(242,237,229,0.8); border: 1.5px solid rgba(255,255,255,0.15); }
     .btn-outline-light:hover { background: rgba(255,255,255,0.06); color: #f2ede5; opacity: 1; border-color: rgba(255,255,255,0.25); }
 
     /* FOOTER */
-    .footer { background: var(--bg-dark); border-top: 1px solid rgba(255,255,255,0.06); padding: 48px; }
-    .footer-inner { max-width: 1340px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+    .footer { background: var(--bg-dark); border-top: 1px solid rgba(255,255,255,0.06); padding: 40px 48px; }
+    .footer-inner { max-width: 1340px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
     .footer-brand { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: rgba(242,237,229,0.6); display: flex; align-items: center; gap: 10px; }
-    .footer-links { display: flex; gap: 28px; }
-    .footer-links a { font-size: 0.875rem; color: rgba(242,237,229,0.4); text-decoration: none; transition: color 0.2s; }
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.875rem; color: rgba(242,237,229,0.4); text-decoration: none; transition: color 0.2s; white-space: nowrap; }
     .footer-links a:hover { color: rgba(242,237,229,0.7); }
     .footer-copy { font-size: 0.8125rem; color: rgba(242,237,229,0.3); }
 
-    /* MOBILE */
-    @media (max-width: 1024px) {
-      .hero-container { grid-template-columns: 1fr; gap: 48px; }
-      .hero-visual { display: none; }
-      .subjects-grid { grid-template-columns: 1fr; }
+    /* ── RESPONSIVE ── */
+
+    /* Large tablets / small laptops */
+    @media (max-width: 1100px) {
+      .hero-container { gap: 48px; }
       .unis-grid { grid-template-columns: repeat(2, 1fr); }
-      .pricing-grid { grid-template-columns: 1fr; }
-      .pricing-card.featured { transform: scale(1); }
-      .testimonials-grid { grid-template-columns: 1fr; }
-      .steps-grid { grid-template-columns: 1fr; }
-      .step-connector { display: none; }
     }
-    @media (max-width: 768px) {
+
+    /* Tablets */
+    @media (max-width: 900px) {
       .landing-nav { padding: 0 24px; }
       .landing-nav-links { display: none; }
       .hero { padding: 100px 0 64px; }
-      .hero-container { padding: 0 24px; }
+      .hero-container { grid-template-columns: 1fr; gap: 0; padding: 0 24px; }
+      .hero-visual { display: none; }
+      .hero-subtitle { max-width: 100%; }
+      .section { padding: 64px 0; }
       .section-container { padding: 0 24px; }
-      .trusted-bar { padding: 20px 24px; }
-      .unis-grid { grid-template-columns: 1fr 1fr; }
+      .trusted-bar { padding: 18px 24px; }
+      .steps-grid { grid-template-columns: 1fr; gap: 40px; }
+      .step-connector { display: none; }
+      .subjects-grid { grid-template-columns: 1fr; gap: 16px; }
+      .unis-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 440px; margin-left: auto; margin-right: auto; }
+      .pricing-card.featured { transform: scale(1); }
+      .pricing-card.featured:hover { transform: translateY(-4px); }
+      .testimonials-grid { grid-template-columns: 1fr; gap: 16px; }
       .footer { padding: 32px 24px; }
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .hero { padding: 90px 0 56px; }
+      .hero-container { padding: 0 20px; }
+      .hero-eyebrow { font-size: 0.75rem; padding: 5px 12px; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { text-align: center; justify-content: center; }
+      .hero-stats { gap: 20px; }
+      .hero-stat-divider { display: none; }
+      .hero-stat-value { font-size: 1.6rem; }
+      .section { padding: 52px 0; }
+      .section-container { padding: 0 20px; }
+      .trusted-bar { padding: 16px 20px; }
+      .trusted-bar-inner { gap: 16px; }
+      .trusted-bar-unis { gap: 14px; }
+      .trusted-uni { font-size: 0.8125rem; }
+      .unis-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .uni-card { padding: 14px 16px; gap: 10px; }
+      .uni-logo-wrap { width: 36px; height: 36px; }
+      .uni-name { font-size: 0.75rem; }
+      .uni-location { font-size: 0.6875rem; }
+      .subject-card-top { padding: 22px 20px 16px; }
+      .subject-card-footer { padding: 0 20px 18px; }
+      .subject-features-inner { padding: 16px 20px 20px; }
+      .pricing-grid { max-width: 100%; }
+      .pricing-card { padding: 24px; }
+      .cta-section { padding: 64px 0; }
+      .cta-actions { flex-direction: column; align-items: stretch; padding: 0 20px; }
+      .cta-actions .btn { text-align: center; }
+      .footer { padding: 28px 20px; }
+      .footer-links { gap: 16px; }
+    }
+
+    /* Very small phones */
+    @media (max-width: 380px) {
+      .hero-title { font-size: 2.1rem; }
+      .unis-grid { grid-template-columns: 1fr; }
+      .landing-nav-actions .btn:first-child { display: none; }
     }
   </style>
 </head>
@@ -455,33 +413,18 @@
         <div class="hero-eyebrow-dot"></div>
         The #1 GED Prep Platform
       </div>
-      <h1 class="hero-title">
-        Score <span>190+</span><br>
-        on Your GED.<br>
-        Guaranteed.
-      </h1>
-      <p class="hero-subtitle">
-        10 full-length practice exams per subject. Real GED-style questions. Detailed analytics. Personalized recommendations. Everything you need to go from passing to college-ready.
-      </p>
+      <h1 class="hero-title">Score <span>190+</span><br>on Your GED.<br>Guaranteed.</h1>
+      <p class="hero-subtitle">10 full-length practice exams per subject. Real GED-style questions. Detailed analytics. Personalized recommendations. Everything you need to go from passing to college-ready.</p>
       <div class="hero-actions">
         <a href="/auth/register/" class="btn btn-primary btn-lg">Start Practicing Free &rarr;</a>
         <a href="#how-it-works" class="btn btn-secondary btn-lg">See How It Works</a>
       </div>
       <div class="hero-stats">
-        <div>
-          <div class="hero-stat-value">40</div>
-          <div class="hero-stat-label">Practice Exams</div>
-        </div>
-        <div style="width:1px;height:40px;background:var(--border-primary);"></div>
-        <div>
-          <div class="hero-stat-value">4</div>
-          <div class="hero-stat-label">GED Subjects</div>
-        </div>
-        <div style="width:1px;height:40px;background:var(--border-primary);"></div>
-        <div>
-          <div class="hero-stat-value">190+</div>
-          <div class="hero-stat-label">Target Score</div>
-        </div>
+        <div><div class="hero-stat-value">40</div><div class="hero-stat-label">Practice Exams</div></div>
+        <div class="hero-stat-divider"></div>
+        <div><div class="hero-stat-value">4</div><div class="hero-stat-label">GED Subjects</div></div>
+        <div class="hero-stat-divider"></div>
+        <div><div class="hero-stat-value">190+</div><div class="hero-stat-label">Target Score</div></div>
       </div>
     </div>
     <div class="hero-visual">
@@ -562,7 +505,6 @@
       <p class="section-subheading">10 practice exams per subject. 40 total. Covering every question type and skill area tested on the real GED.</p>
     </div>
     <div class="subjects-grid">
-
       <div class="subject-card rla">
         <div class="subject-card-accent"></div>
         <div class="subject-card-bg"></div>
@@ -591,7 +533,6 @@
           </div>
         </div>
       </div>
-
       <div class="subject-card math">
         <div class="subject-card-accent"></div>
         <div class="subject-card-bg"></div>
@@ -620,7 +561,6 @@
           </div>
         </div>
       </div>
-
       <div class="subject-card science">
         <div class="subject-card-accent"></div>
         <div class="subject-card-bg"></div>
@@ -649,7 +589,6 @@
           </div>
         </div>
       </div>
-
       <div class="subject-card social">
         <div class="subject-card-accent"></div>
         <div class="subject-card-bg"></div>
@@ -678,7 +617,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
@@ -692,15 +630,15 @@
       <p class="section-subheading">Over 3,000 colleges and universities across the US accept GED credentials. A score of 175+ qualifies you for college-ready status and potential college credits.</p>
     </div>
     <div class="unis-grid">
-  <div class="uni-card"><div class="uni-logo-wrap" style="background:#A51C30;"><span style="color:white;font-weight:800;font-size:1rem;">H</span></div><div><div class="uni-name">Harvard Extension</div><div class="uni-location">Cambridge, MA</div></div></div>
-  <div class="uni-card"><div class="uni-logo-wrap" style="background:#003087;"><span style="color:white;font-weight:800;font-size:1rem;">C</span></div><div><div class="uni-name">Columbia University</div><div class="uni-location">New York, NY</div></div></div>
-  <div class="uni-card"><div class="uni-logo-wrap" style="background:#8A8B8C;"><span style="color:white;font-weight:800;font-size:1rem;">M</span></div><div><div class="uni-name">MIT</div><div class="uni-location">Cambridge, MA</div></div></div>
-  <div class="uni-card"><div class="uni-logo-wrap" style="background:#1E407C;"><span style="color:white;font-weight:800;font-size:1rem;">P</span></div><div><div class="uni-name">Penn State University</div><div class="uni-location">State College, PA</div></div></div>
-  <div class="uni-card"><div class="uni-logo-wrap" style="background:#8C1D40;"><span style="color:white;font-weight:800;font-size:1rem;">A</span></div><div><div class="uni-name">Arizona State University</div><div class="uni-location">Tempe, AZ</div></div></div>
-  <div class="uni-card"><div class="uni-logo-wrap" style="background:#782F40;"><span style="color:white;font-weight:800;font-size:1rem;">F</span></div><div><div class="uni-name">Florida State University</div><div class="uni-location">Tallahassee, FL</div></div></div>
-  <div class="uni-card"><div class="uni-logo-wrap" style="background:#BF5700;"><span style="color:white;font-weight:800;font-size:1rem;">T</span></div><div><div class="uni-name">University of Texas</div><div class="uni-location">Austin, TX</div></div></div>
-  <div class="uni-card"><div class="uni-logo-wrap" style="background:#003262;"><span style="color:white;font-weight:800;font-size:1rem;">U</span></div><div><div class="uni-name">UCLA</div><div class="uni-location">Los Angeles, CA</div></div></div>
-</div>
+      <div class="uni-card"><div class="uni-logo-wrap" style="background:#A51C30;"><span style="color:white;font-weight:800;font-size:1rem;">H</span></div><div><div class="uni-name">Harvard Extension</div><div class="uni-location">Cambridge, MA</div></div></div>
+      <div class="uni-card"><div class="uni-logo-wrap" style="background:#003087;"><span style="color:white;font-weight:800;font-size:1rem;">C</span></div><div><div class="uni-name">Columbia University</div><div class="uni-location">New York, NY</div></div></div>
+      <div class="uni-card"><div class="uni-logo-wrap" style="background:#8A8B8C;"><span style="color:white;font-weight:800;font-size:1rem;">M</span></div><div><div class="uni-name">MIT</div><div class="uni-location">Cambridge, MA</div></div></div>
+      <div class="uni-card"><div class="uni-logo-wrap" style="background:#1E407C;"><span style="color:white;font-weight:800;font-size:1rem;">P</span></div><div><div class="uni-name">Penn State University</div><div class="uni-location">State College, PA</div></div></div>
+      <div class="uni-card"><div class="uni-logo-wrap" style="background:#8C1D40;"><span style="color:white;font-weight:800;font-size:1rem;">A</span></div><div><div class="uni-name">Arizona State</div><div class="uni-location">Tempe, AZ</div></div></div>
+      <div class="uni-card"><div class="uni-logo-wrap" style="background:#782F40;"><span style="color:white;font-weight:800;font-size:1rem;">F</span></div><div><div class="uni-name">Florida State</div><div class="uni-location">Tallahassee, FL</div></div></div>
+      <div class="uni-card"><div class="uni-logo-wrap" style="background:#BF5700;"><span style="color:white;font-weight:800;font-size:1rem;">T</span></div><div><div class="uni-name">Univ. of Texas</div><div class="uni-location">Austin, TX</div></div></div>
+      <div class="uni-card"><div class="uni-logo-wrap" style="background:#003262;"><span style="color:white;font-weight:800;font-size:1rem;">U</span></div><div><div class="uni-name">UCLA</div><div class="uni-location">Los Angeles, CA</div></div></div>
+    </div>
     <p class="unis-note">And <strong>3,000+ more</strong> accredited colleges and universities nationwide accept GED credentials.</p>
   </div>
 </section>
@@ -713,52 +651,26 @@
       <h2 class="section-heading">More practice. Better analytics.<br>Lower price.</h2>
       <p class="section-subheading">Compare us to GED Testing Service's own practice tests and see why serious students choose GED190+.</p>
     </div>
-    <table class="vs-table">
-      <thead>
-        <tr>
-          <th style="background:var(--bg-elevated);color:var(--text-tertiary);font-size:0.8125rem;">Feature</th>
-          <th class="ours">GED190+ ✦</th>
-          <th class="theirs">GED Ready (Official)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Practice tests per subject</td>
-          <td class="ours">10 full exams</td>
-          <td class="theirs">1 exam</td>
-        </tr>
-        <tr>
-          <td>Price per subject</td>
-          <td class="ours">$9.99 one-time</td>
-          <td class="theirs">$7.99 per test</td>
-        </tr>
-        <tr>
-          <td>Detailed skill breakdown</td>
-          <td class="ours"><span class="check">✓</span> Yes — 6 skill areas</td>
-          <td class="theirs"><span class="cross">✗</span> Basic only</td>
-        </tr>
-        <tr>
-          <td>Question explanations</td>
-          <td class="ours"><span class="check">✓</span> Every question</td>
-          <td class="theirs"><span class="cross">✗</span> Not available</td>
-        </tr>
-        <tr>
-          <td>Score trend tracking</td>
-          <td class="ours"><span class="check">✓</span> All tests tracked</td>
-          <td class="theirs"><span class="cross">✗</span> No history</td>
-        </tr>
-        <tr>
-          <td>Personalized recommendations</td>
-          <td class="ours"><span class="check">✓</span> AI-powered tips</td>
-          <td class="theirs"><span class="cross">✗</span> Not available</td>
-        </tr>
-        <tr>
-          <td>Difficulty progression</td>
-          <td class="ours"><span class="check">✓</span> 155 → 190+ path</td>
-          <td class="theirs"><span class="cross">✗</span> Fixed difficulty</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="vs-table-wrap">
+      <table class="vs-table">
+        <thead>
+          <tr>
+            <th style="background:var(--bg-elevated);color:var(--text-tertiary);font-size:0.8125rem;">Feature</th>
+            <th class="ours">GED190+ ✦</th>
+            <th class="theirs">GED Ready (Official)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Practice tests per subject</td><td class="ours">10 full exams</td><td class="theirs">1 exam</td></tr>
+          <tr><td>Price per subject</td><td class="ours">$9.99 one-time</td><td class="theirs">$7.99 per test</td></tr>
+          <tr><td>Detailed skill breakdown</td><td class="ours"><span class="check">✓</span> Yes — 6 skill areas</td><td class="theirs"><span class="cross">✗</span> Basic only</td></tr>
+          <tr><td>Question explanations</td><td class="ours"><span class="check">✓</span> Every question</td><td class="theirs"><span class="cross">✗</span> Not available</td></tr>
+          <tr><td>Score trend tracking</td><td class="ours"><span class="check">✓</span> All tests tracked</td><td class="theirs"><span class="cross">✗</span> No history</td></tr>
+          <tr><td>Personalized recommendations</td><td class="ours"><span class="check">✓</span> AI-powered tips</td><td class="theirs"><span class="cross">✗</span> Not available</td></tr>
+          <tr><td>Difficulty progression</td><td class="ours"><span class="check">✓</span> 155 → 190+ path</td><td class="theirs"><span class="cross">✗</span> Fixed difficulty</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>
 
@@ -771,7 +683,6 @@
       <p class="section-subheading" style="margin:0 auto;">No subscriptions. No hidden fees. Pay once, practice as many times as you want.</p>
     </div>
     <div class="pricing-grid">
-
       <div class="pricing-card">
         <div class="pricing-plan">Free</div>
         <div class="pricing-price">$<span>0</span></div>
@@ -787,7 +698,6 @@
         </div>
         <a href="/auth/register/" class="btn btn-secondary w-full">Start Free</a>
       </div>
-
       <div class="pricing-card featured">
         <div class="pricing-popular">Most Popular</div>
         <div class="pricing-plan">All Subjects Bundle</div>
@@ -804,7 +714,6 @@
         </div>
         <a href="/auth/register/" class="btn btn-lime w-full">Get Full Access &rarr;</a>
       </div>
-
       <div class="pricing-card">
         <div class="pricing-plan">Per Subject</div>
         <div class="pricing-price">$<span>9</span>.99</div>
@@ -820,7 +729,6 @@
         </div>
         <a href="/auth/register/" class="btn btn-primary w-full">Choose Subject</a>
       </div>
-
     </div>
   </div>
 </section>
@@ -838,10 +746,7 @@
         <p class="testimonial-text">"I scored 155 on my first GED Ready test. After 3 weeks on GED190+, I got 182 on the real exam. The analytics showed me exactly what to focus on."</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar">M</div>
-          <div>
-            <div class="testimonial-name">Marcus T.</div>
-            <div class="testimonial-score">155 → 182 GED Score</div>
-          </div>
+          <div><div class="testimonial-name">Marcus T.</div><div class="testimonial-score">155 → 182 GED Score</div></div>
         </div>
       </div>
       <div class="testimonial-card">
@@ -849,10 +754,7 @@
         <p class="testimonial-text">"The question explanations are incredible. Every wrong answer tells you exactly why it's wrong. I finally understand argument analysis."</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar">S</div>
-          <div>
-            <div class="testimonial-name">Sarah K.</div>
-            <div class="testimonial-score">163 → 191 GED Score</div>
-          </div>
+          <div><div class="testimonial-name">Sarah K.</div><div class="testimonial-score">163 → 191 GED Score</div></div>
         </div>
       </div>
       <div class="testimonial-card">
@@ -860,10 +762,7 @@
         <p class="testimonial-text">"10 practice tests is what made the difference. By test 7 I was consistently scoring above 185. The difficulty progression is perfectly designed."</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar">J</div>
-          <div>
-            <div class="testimonial-name">James R.</div>
-            <div class="testimonial-score">148 → 186 GED Score</div>
-          </div>
+          <div><div class="testimonial-name">James R.</div><div class="testimonial-score">148 → 186 GED Score</div></div>
         </div>
       </div>
     </div>
@@ -901,7 +800,6 @@
 </footer>
 
 <script>
-  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
@@ -910,7 +808,6 @@
     });
   });
 
-  // Animate on scroll
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -927,6 +824,5 @@
     observer.observe(el);
   });
 </script>
-
 </body>
 </html>
