@@ -6,20 +6,26 @@ from django.db.models import Avg, Count
 from exam.models import PracticeTest, TestAttempt, UserProfile
 
 
+def landing(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard:home')
+    return render(request, 'landing.html')
+
+
 @login_required
 def home(request):
     tests = PracticeTest.objects.all()
     attempts = TestAttempt.objects.filter(user=request.user).select_related('test')
-    
+
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
-    
+
     completed = attempts.filter(status='completed')
     in_progress = attempts.filter(status='in_progress')
-    
+
     # Test status map
     completed_map = {a.test.number: a for a in completed.order_by('-completed_at')}
     in_progress_map = {a.test.number: a for a in in_progress.order_by('-started_at')}
-    
+
     test_data = []
     for test in tests:
         status = 'not_started'
@@ -32,19 +38,19 @@ def home(request):
         elif test.number in in_progress_map:
             status = 'in_progress'
             attempt = in_progress_map[test.number]
-        
+
         test_data.append({
             'test': test,
             'status': status,
             'score': score,
             'attempt': attempt,
         })
-    
+
     # Analytics
     scores = [a.estimated_ged_score for a in completed if a.estimated_ged_score]
     avg_score = round(sum(scores) / len(scores)) if scores else None
     best_score = max(scores) if scores else None
-    
+
     # Category averages
     category_scores = {}
     if completed.exists():
@@ -59,10 +65,10 @@ def home(request):
             vals = [getattr(a, cat) for a in completed if getattr(a, cat) is not None]
             if vals:
                 category_scores[label] = round(sum(vals) / len(vals), 1)
-    
-    # Score trend (last 5 completed tests)
+
+    # Score trend (last 10 completed tests)
     trend = list(completed.order_by('completed_at')[:10].values_list('estimated_ged_score', flat=True))
-    
+
     # Recommendations
     recommendations = []
     if category_scores:
@@ -77,8 +83,9 @@ def home(request):
                 'Logical Reasoning': 'Study common logical fallacies: post hoc, false dichotomy, hasty generalization.',
                 'Text Improvement': 'Practice identifying sentences that disrupt paragraph flow and coherence.',
             }
-            recommendations.append({'area': label, 'score': score, 'tip': rec_map.get(label, 'Review this skill area.')})
-    
+            recommendations.append(
+                {'area': label, 'score': score, 'tip': rec_map.get(label, 'Review this skill area.')})
+
     return render(request, 'dashboard/home.html', {
         'test_data': test_data,
         'profile': profile,
@@ -95,7 +102,7 @@ def home(request):
 def analytics(request):
     attempts = TestAttempt.objects.filter(user=request.user, status='completed').order_by('completed_at')
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
-    
+
     chart_data = []
     for a in attempts:
         chart_data.append({
@@ -104,7 +111,7 @@ def analytics(request):
             'percentage': a.percentage_score,
             'date': a.completed_at.strftime('%b %d') if a.completed_at else '',
         })
-    
+
     skill_history = {}
     for a in attempts:
         for cat, label in [
@@ -120,7 +127,7 @@ def analytics(request):
                 if label not in skill_history:
                     skill_history[label] = []
                 skill_history[label].append(val)
-    
+
     return render(request, 'dashboard/analytics.html', {
         'attempts': attempts,
         'chart_data': chart_data,
