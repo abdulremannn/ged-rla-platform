@@ -87,4 +87,4 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ged-rla-platform-change-in-production-2024')
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
